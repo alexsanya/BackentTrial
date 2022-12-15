@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Get contract by Id should return contract by id if profile belongs to client 1`] = `
+{
+  "ClientId": 1,
+  "ContractorId": 5,
+  "id": 1,
+  "status": "terminated",
+  "terms": "bla bla bla",
+}
+`;
+
+exports[`Get contract by Id should return contract by id if profile belongs to contractor 1`] = `
+{
+  "ClientId": 1,
+  "ContractorId": 5,
+  "id": 1,
+  "status": "terminated",
+  "terms": "bla bla bla",
+}
+`;

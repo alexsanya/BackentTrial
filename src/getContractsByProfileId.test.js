@@ -1,9 +1,8 @@
 
-const _ = require('lodash');
 const request = require("supertest");
 const app = require("./app.js");
 const { seed } = require('../scripts/seedDb');
-const { HTTP_STATUS_CODES } = require('./constants');
+const { HTTP_STATUS_CODES, stripTimestamps } = require('./common');
 
 describe('Get contracts by profile', () => {
 
@@ -12,7 +11,6 @@ describe('Get contracts by profile', () => {
       .get(`/contracts/${query}`)
       .set('profile_id', profileId)
 
-  const stripTimestamps = item => _.omit(item, ['createdAt', 'updatedAt']);
 
   beforeEach(async () => {
     await seed(); //reset database before each test

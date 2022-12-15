@@ -1,8 +1,7 @@
-const _ = require('lodash');
 const request = require("supertest");
 const app = require("./app.js");
 const { seed } = require('../scripts/seedDb');
-const { HTTP_STATUS_CODES } = require('./constants');
+const { HTTP_STATUS_CODES, stripTimestamps } = require('./common');
 
 describe('Get contract by Id', () => {
 
@@ -10,15 +9,6 @@ describe('Get contract by Id', () => {
     request(app)
       .get(`/contracts/${contractId}`)
       .set('profile_id', profileId)
-
-  const matchContractData = data =>
-    expect(_.omit(data, 'createdAt', 'updatedAt')).toStrictEqual({
-      id:1,
-      terms: 'bla bla bla',
-      status: 'terminated',
-      ClientId: 1,
-      ContractorId:5
-    });
 
   beforeEach(async () => {
     await seed(); //reset database before each test
@@ -31,7 +21,7 @@ describe('Get contract by Id', () => {
     const response = await getContract(contractId, profileId)     
       .expect('Content-Type', /json/)
       .expect(HTTP_STATUS_CODES.OK)
-      .then(response => matchContractData(response.body));
+    expect(stripTimestamps(response.body)).toMatchSnapshot();
   });
 
   it('should return contract by id if profile belongs to contractor', async () => {
@@ -40,7 +30,7 @@ describe('Get contract by Id', () => {
     const response = await getContract(contractId, profileId)
       .expect('Content-Type', /json/)
       .expect(HTTP_STATUS_CODES.OK)
-      .then(response => matchContractData(response.body));
+    expect(stripTimestamps(response.body)).toMatchSnapshot();
   });
 
 
