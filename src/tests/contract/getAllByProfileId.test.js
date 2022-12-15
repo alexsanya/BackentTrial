@@ -1,8 +1,8 @@
 
 const request = require("supertest");
-const app = require("./app.js");
-const { seed } = require('../scripts/seedDb');
-const { HTTP_STATUS_CODES, stripTimestamps } = require('./common');
+const app = require("../../app.js");
+const { seed } = require('../../../scripts/seedDb');
+const { HTTP_STATUS_CODES, stripTimestamps } = require('../../common');
 
 describe('Get contracts by profile', () => {
 
