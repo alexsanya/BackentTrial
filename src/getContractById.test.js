@@ -2,15 +2,9 @@ const _ = require('lodash');
 const request = require("supertest");
 const app = require("./app.js");
 const { seed } = require('../scripts/seedDb');
+const { HTTP_STATUS_CODES } = require('./constants');
 
-const HTTP_STATUS_CODES = {
-  BAD_REQUEST: 400,
-  FORBIDDEN: 403,
-  NOT_FOUND: 404,
-  OK: 200
-}
-
-describe('Contracts api', () => {
+describe('Get contract by Id', () => {
 
   const getContract = (contractId, profileId) =>
     request(app)

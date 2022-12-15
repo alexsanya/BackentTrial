@@ -5,6 +5,8 @@ const prodConfig = {
   storage: './database.sqlite3',
 }
 
+// separate config is needed in order to avoid sqquelize output in tests report
+// and keepeng apart main and test databases
 const testConfig = {
   ...prodConfig,
   storage: './database-test.sqlite3',

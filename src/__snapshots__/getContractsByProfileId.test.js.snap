@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Get contracts by profile should cut contracts for clients profile if limit provided 1`] = `
+[
+  {
+    "ClientId": 2,
+    "ContractorId": 6,
+    "id": 3,
+    "status": "in_progress",
+    "terms": "bla bla bla",
+  },
+]
+`;
+
+exports[`Get contracts by profile should cut contracts for contractors profile if limit provided 1`] = `
+[
+  {
+    "ClientId": 3,
+    "ContractorId": 8,
+    "id": 5,
+    "status": "new",
+    "terms": "bla bla bla",
+  },
+]
+`;
+
+exports[`Get contracts by profile should offset contracts for clients profile if offset provided 1`] = `
+[
+  {
+    "ClientId": 2,
+    "ContractorId": 7,
+    "id": 4,
+    "status": "in_progress",
+    "terms": "bla bla bla",
+  },
+]
+`;
+
+exports[`Get contracts by profile should offset contracts for contractors profile if offest provided 1`] = `
+[
+  {
+    "ClientId": 4,
+    "ContractorId": 8,
+    "id": 9,
+    "status": "in_progress",
+    "terms": "bla bla bla",
+  },
+]
+`;
+
+exports[`Get contracts by profile should return contracts those belongs to clients profile 1`] = `
+[
+  {
+    "ClientId": 2,
+    "ContractorId": 6,
+    "id": 3,
+    "status": "in_progress",
+    "terms": "bla bla bla",
+  },
+  {
+    "ClientId": 2,
+    "ContractorId": 7,
+    "id": 4,
+    "status": "in_progress",
+    "terms": "bla bla bla",
+  },
+]
+`;
+
+exports[`Get contracts by profile should return contracts those belongs to contractors profile 1`] = `
+[
+  {
+    "ClientId": 3,
+    "ContractorId": 8,
+    "id": 5,
+    "status": "new",
+    "terms": "bla bla bla",
+  },
+  {
+    "ClientId": 4,
+    "ContractorId": 8,
+    "id": 9,
+    "status": "in_progress",
+    "terms": "bla bla bla",
+  },
+]
+`;
