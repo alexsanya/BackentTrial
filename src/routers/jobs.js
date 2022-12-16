@@ -1,44 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const { Op } = require('sequelize');
 const { HTTP_STATUS_CODES } = require('../common');
 const {getProfile} = require('../middleware/getProfile')
+const {getUnpaidJobsForProfile} = require('./common');
 const {userPaymentsSemafor, userPaymentsUnlock, errorHandler} = require('../middleware/userPaymentsSemafor');
 
-const getUnpaidJobsForProfile = async (profile, models) => {
-  const {Contract, Profile, Job} = models;
-  // get all contracts numbers for profile
-  const contractIds = await Contract.findAll({
-    attributes: ['id'],
-    where: {
-      status: {
-        [Op.not]: 'terminated',  //assuming the contract couldn't be terminated untill all jobs are payed
-      }
-    },
-    include: {
-      model: Profile,
-      required: true,
-      as: profile.type === 'client' ? 'Client' : 'Contractor',
-      where: {
-        id: profile.id
-      },
-    }
-  }).then(results => results.map(item => item.dataValues.id))
-
-  // get all unpayed jobs for list of contracts
-  const jobs = await Job.findAll({
-    where: {
-      ContractId: {
-        [Op.in]: contractIds
-      },
-      paid: {
-        [Op.not]: true
-      }
-    }
-  });
-
-  return jobs;
-}
 
 router.get('/jobs/unpaid', getProfile, async (req, res) => {
   const { profile } = req
@@ -107,7 +73,6 @@ router.post('/jobs/:job_id(\\d+)/pay', getProfile, userPaymentsSemafor, async (r
       },
       transaction
     });
-
 
     await Job.update({
       paid: true,

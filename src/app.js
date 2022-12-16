@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const {sequelize} = require('./model')
 const contractsRouter = require('./routers/contract');
 const jobsRouter = require('./routers/jobs');
+const balancesRouter = require('./routers/balances');
+
 const app = express();
 app.use(bodyParser.json());
 app.set('sequelize', sequelize)
@@ -19,6 +21,7 @@ const invalidPathHandler = (request, response, next) => {
 
 app.use(contractsRouter);
 app.use(jobsRouter);
+app.use(balancesRouter);
 app.use(errorHandler);
 app.use(invalidPathHandler);
 
