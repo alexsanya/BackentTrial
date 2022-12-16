@@ -4,6 +4,7 @@ const {sequelize} = require('./model')
 const contractsRouter = require('./routers/contract');
 const jobsRouter = require('./routers/jobs');
 const balancesRouter = require('./routers/balances');
+const admin = require('./routers/admin');
 
 const app = express();
 app.use(bodyParser.json());
@@ -22,6 +23,7 @@ const invalidPathHandler = (request, response, next) => {
 app.use(contractsRouter);
 app.use(jobsRouter);
 app.use(balancesRouter);
+app.use(admin);
 app.use(errorHandler);
 app.use(invalidPathHandler);
 
