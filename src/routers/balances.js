@@ -45,7 +45,7 @@ router.post('/balances/deposit/:userId', getProfileByUserId, userPaymentsSemafor
         id: profile.id
       }
     });
-    res.status(202).end();
+    res.status(201).end();
 
   } catch(error) {
     console.log(error);

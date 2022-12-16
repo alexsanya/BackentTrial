@@ -85,7 +85,7 @@ router.post('/jobs/:job_id(\\d+)/pay', getProfile, userPaymentsSemafor, async (r
     });
 
     await transaction.commit();
-    res.status(202).end();
+    res.status(201).end();
     next();
   } catch(error) {
     console.log(error);
