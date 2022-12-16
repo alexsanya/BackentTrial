@@ -23,6 +23,19 @@ const getBestProfession = async (sequelize, start, end) => {
   return profession;
 }
 
+const getBestClients = async (sequelize, start, end, limit) => {
+  const getBestClientSQL = `select Profiles.* from Jobs
+   join Contracts on Jobs.ContractId = Contracts.id
+   join Profiles on Contracts.ClientId = Profiles.id
+   where Jobs.paymentDate between '${start}' and '${end}' 
+   group by Profiles.id
+   order by sum(price) desc
+   limit ${limit}`;
+  
+  const [ bestClients ] = await sequelize.query(getBestClientSQL, { raw: true });
+  return bestClients;
+}
+
 // defer execution if last invocation was more recent than period ago
 const throttle = (func, period) => {
   let lastCallTs;
@@ -47,29 +60,42 @@ const throttle = (func, period) => {
   }
 }
 
-const THROTTLE_INTERVAL_MS = 1000; // there would be no more than one aggregation query per this interval
-const throttledQuery = throttle(getBestProfession, THROTTLE_INTERVAL_MS);
-
-router.get('/admin/best-profession', async (req, res, next) => {
+const datesIntervalMiddleware = (req, res, next) => {
   const { start, end } = req.query;
   if (!Date.parse(start) || !Date.parse(end)) {
     return res.status(400).send('Wrong date format');
   }
 
   // make sure params have date format to avoid SQL injections
-  const startParsed = getFormattedDate(new Date(start));
-  const endParsed = getFormattedDate(new Date(end));
-  console.log({ startParsed, endParsed });
+  req.dateStart = getFormattedDate(new Date(start));
+  req.dateEnd = getFormattedDate(new Date(end));
+
+  next();
+}
+
+const THROTTLE_INTERVAL_MS = 1000; // there would be no more than one aggregation query per this interval
+const throttledBestProfesionQuery = throttle(getBestProfession, THROTTLE_INTERVAL_MS);
+const throttledBestClientsQuery = throttle(getBestClients, THROTTLE_INTERVAL_MS);
+
+router.get('/admin/best-profession', datesIntervalMiddleware, async (req, res, next) => {
+  const { dateStart, dateEnd } = req;
+  console.log({ dateStart, dateEnd });
 
   const sequelize = req.app.get('sequelize');
   // deferring query to DB cause aggregation queries could be heavy
-  const profession = await throttledQuery(sequelize, startParsed, endParsed);
+  const profession = await throttledBestProfesionQuery(sequelize, dateStart, dateEnd);
   res.status(200).json({ profession });
 
 });
 
-router.get('/admin/best-clients', async (req, res, next) => {
-  // imlement caching
+router.get('/admin/best-clients', datesIntervalMiddleware, async (req, res, next) => {
+  const { dateStart, dateEnd } = req;
+  console.log({ dateStart, dateEnd });
+
+  const sequelize = req.app.get('sequelize');
+  // deferring query to DB cause aggregation queries could be heavy
+  const bestClients = await throttledBestClientsQuery(sequelize, dateStart, dateEnd, req.query.limit);
+  res.status(200).json({ bestClients });
 });
 
 module.exports = router
