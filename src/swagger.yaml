@@ -1,0 +1,221 @@
+swagger: '2.0'
+info:
+  title: DEEL BACKEND TASK
+  description: Api endpoints
+  version: 0.1.0
+schemes:
+  - http
+basePath: /
+produces:
+  - application/json
+paths:
+  /contracts/{id}:
+    get:
+      summary: Return contract by id
+      tags:
+        - Contracts
+      parameters:
+        - name: id
+          type: number
+          in: path
+          required: true
+        - name: profile_id
+          type: number
+          in: header
+          required: true
+      responses:
+        '200':
+          description: Contract
+          schema:
+            $ref: '#/definitions/Contract'
+        '403':
+          description: Forbidden
+  /contracts/:
+    get:
+      summary: Return all contracts for profile
+      tags:
+        - Contracts
+      parameters:
+        - name: profile_id
+          type: number
+          in: header
+          required: true
+      responses:
+        '200':
+          description: Contract
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Contract'
+        '403':
+          description: Forbidden
+  /jobs/unpaid:
+    get:
+      summary: Return all unpaid jos for profile
+      tags:
+        - Jobs
+      parameters:
+        - name: profile_id
+          type: number
+          in: header
+          required: true
+      responses:
+        '200':
+          description: Jobs
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Job'
+        '403':
+          description: Forbidden
+  /jobs/{job_id}/pay:
+    post:
+      summary: Made a payment for job
+      tags:
+        - Jobs
+      parameters:
+        - name: profile_id
+          type: number
+          in: header
+          required: true
+        - name: job_id
+          type: number
+          in: path
+          required: true
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Bad request
+        '403':
+          description: Forbidden
+  /balances/deposit/{userId}:
+    post:
+      summary: Deposit funds to client`s account
+      tags:
+        - Balances
+      parameters:
+        - name: userId
+          type: number
+          in: path
+          required: true
+        - name: amount
+          schema:
+            type: object
+            properties:
+              amount:
+                type: number
+                description: Amount to deposit
+            required:
+              - amount
+          in: body
+          required: true
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Bad request
+  /admin/best-profession:
+    get:
+      summary: Get best profession
+      tags:
+        - Admin
+      parameters:
+        - name: start
+          type: string
+          in: query
+          required: true
+        - name: end
+          type: string
+          in: query
+          required: true
+      responses:
+        '200':
+          description: Profession
+          schema:
+            type: string
+        '400':
+          description: Bad request
+  /admin/best-clients:
+    get:
+      summary: Get best clients
+      tags:
+        - Admin
+      parameters:
+        - name: start
+          type: string
+          in: query
+          required: true
+        - name: end
+          type: string
+          in: query
+          required: true
+        - name: limit
+          type: number
+          in: query
+          required: true
+      responses:
+        '200':
+          description: List of clients
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Client'
+        '400':
+          description: Bad request
+definitions:
+  Contract:
+    type: object
+    properties:
+      id:
+        type: number
+      terms:
+        type: string
+      status:
+        type: string
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
+      ContractorId:
+        type: number
+      ClientId:
+        type: number
+  Client:
+    type: object
+    properties:
+      id:
+        type: number
+      firstName:
+        type: string
+      lastName:
+        type: string
+      profession:
+        type: number
+      balance:
+        type: number
+      type:
+        type: number
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
+  Job:
+    type: object
+    properties:
+      id:
+        type: number
+      description:
+        type: string
+      price:
+        type: number
+      paid:
+        type: boolean
+      paymentDate:
+        type: string
+      createdAt:
+        type: string
+      updatedAt:
+        type: string
+      ContractId:
+        type: number

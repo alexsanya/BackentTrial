@@ -5,6 +5,7 @@ const contractsRouter = require('./routers/contract');
 const jobsRouter = require('./routers/jobs');
 const balancesRouter = require('./routers/balances');
 const admin = require('./routers/admin');
+const swagger = require('./routers/swagger');
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,6 +25,7 @@ app.use(contractsRouter);
 app.use(jobsRouter);
 app.use(balancesRouter);
 app.use(admin);
+app.use(swagger);
 app.use(errorHandler);
 app.use(invalidPathHandler);
 
