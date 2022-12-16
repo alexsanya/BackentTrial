@@ -48,6 +48,7 @@ router.post('/jobs/:job_id(\\d+)/pay', getProfile, userPaymentsSemafor, async (r
 
     if (job.price > profile.balance) {
       res.status(HTTP_STATUS_CODES.CONFLICT).send(`The balance is insufficient, needs to be at least ${job.price}`);
+      throw new Error('Insufficient balance');
     }
 
     const contractor = await Profile.findOne({
