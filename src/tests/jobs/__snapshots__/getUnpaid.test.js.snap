@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Get unpaid jobs should return all unpaid jobs for profile 1`] = `
+[
+  {
+    "ContractId": 3,
+    "description": "work",
+    "id": 3,
+    "paid": null,
+    "paymentDate": null,
+    "price": 202,
+  },
+  {
+    "ContractId": 4,
+    "description": "work",
+    "id": 4,
+    "paid": null,
+    "paymentDate": null,
+    "price": 200,
+  },
+]
+`;
