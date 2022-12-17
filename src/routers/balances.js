@@ -4,7 +4,7 @@ const logger = require('../logger');
 const { HTTP_STATUS_CODES } = require('../common');
 const {getUnpaidJobsForProfile} = require('./common');
 const {getProfile} = require('../middleware/getProfile')
-const {userPaymentsSemafor, userPaymentsUnlock, errorHandler} = require('../middleware/userPaymentsSemafor');
+const {userPaymentsSemaphore, userPaymentsUnlock, errorHandler} = require('../middleware/userPaymentsSemaphore');
 
 const getProfileByUserId = async (req, res, next) => {
   const userId = +req.params.userId;
@@ -24,7 +24,7 @@ const getProfileByUserId = async (req, res, next) => {
   next();
 }
 
-router.post('/balances/deposit/:userId', getProfileByUserId, userPaymentsSemafor, async (req, res, next) => {
+router.post('/balances/deposit/:userId', getProfileByUserId, userPaymentsSemaphore, async (req, res, next) => {
   try {
     const { profile } = req;
     const amount = +req.body.amount;

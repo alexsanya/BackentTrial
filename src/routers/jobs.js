@@ -4,7 +4,7 @@ const logger = require('../logger');
 const { HTTP_STATUS_CODES } = require('../common');
 const {getProfile} = require('../middleware/getProfile')
 const {getUnpaidJobsForProfile} = require('./common');
-const {userPaymentsSemafor, userPaymentsUnlock, errorHandler} = require('../middleware/userPaymentsSemafor');
+const {userPaymentsSemaphore, userPaymentsUnlock, errorHandler} = require('../middleware/userPaymentsSemaphore');
 
 
 router.get('/jobs/unpaid', getProfile, async (req, res) => {
@@ -14,7 +14,7 @@ router.get('/jobs/unpaid', getProfile, async (req, res) => {
   res.status(200).json(unpaidJobs);
 });
 
-router.post('/jobs/:job_id(\\d+)/pay', getProfile, userPaymentsSemafor, async (req, res, next) => {
+router.post('/jobs/:job_id(\\d+)/pay', getProfile, userPaymentsSemaphore, async (req, res, next) => {
   const { profile } = req
   const job_id = +req.params.job_id
   const {Job, Profile, Contract} = req.app.get('models')

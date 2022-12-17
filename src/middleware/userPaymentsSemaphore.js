@@ -4,7 +4,7 @@ const { HTTP_STATUS_CODES } = require('../common');
 const paymentsInProgress = {}
 
 // using semafor to prevent double-spending
-const userPaymentsSemafor = async (req, res, next) => {
+const userPaymentsSemaphore = async (req, res, next) => {
   const { profile } = req
   if (paymentsInProgress[profile.id]) {
     return res.send(HTTP_STATUS_CODES.CONFLICT);
@@ -33,7 +33,7 @@ const errorHandler = async (err, req, res, next) => {
 }
 
 module.exports = {
-  userPaymentsSemafor,
+  userPaymentsSemaphore,
   userPaymentsUnlock,
   errorHandler
 }

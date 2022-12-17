@@ -39,18 +39,15 @@
 ### Get contracts by profile
 - If thee are too many contracts for particular profile then API will be forsing client to use pagination with `offset` and `limit` parameters
 
-### Get unpaid contracts
-- Implemented with assumption that contract couldn't be terminated untill all jobs are payed
-
 ### Make payment endpoint
-- Concurrent executions for the same profile are prevented by semafor - it is map that marks profiles for which payment operation is in progress, until it finished or failed other payment requests for same profile will result in `409 Conflict` error
-- Semafor implemented as a couple of middlewares - one before processing to lock the profile and another after - to release it
+- Concurrent executions for the same profile are prevented by semaphore - it is map that marks profiles for which payment operation is in progress, until it finished or failed other payment requests for same profile will result in `409 Conflict` error
+- semaphore implemented as a couple of middlewares - one before processing to lock the profile and another after - to release it
 - All state changes for Job and Profile tables are within same transaction to avoid mismanagement of state
 
 ### Topup client account endpoint
 - Will run only for client profiles, request to other profiles will result in `400 Bad request` error
-- Using the same semafor as make payment endpoint - locking per profile
+- Using the same semaphore as make payment endpoint - locking per profile
 
 ### Best profession and best clients endpoints
-- Implemented via raw queries, this queries might be heavy so calls to database are wrapped into deferring function called `throttle`, this funstion will not let to execute more than one query per period - other calls will line up in queue and resolving one-per-period. This will prevent overload on database in expense of response time. Also execution time is maesured and written to logs
+- Implemented via raw queries, this queries might be heavy so calls to database are wrapped into deferring function called `throttle`, this function will not let to execute more than one query per period - other calls will line up in queue and resolving one-per-period. This will prevent overload on database at expense of response time. Also execution time is maesured and written to logs
 
