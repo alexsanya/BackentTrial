@@ -29,6 +29,9 @@
 - swagger schema located in `src/swagger.yaml`
 - swagger ui interface availible at address: `http://localhost:3001/api-docs/` 
 
+### Logger
+- All log output is going through `logger.js` so it would be easy to rediect if necessary - 3 log levels are supported: `log`, `debug` and `error`
+
 ### Get contract by id
 - SQL query been modified in order to fetch profiles alongside with contract and check if caller is either a client or contractor
 - Regex filter been added to query in order to protect from SQL injection
@@ -49,5 +52,5 @@
 - Using the same semafor as make payment endpoint - locking per profile
 
 ### Best profession and best clients endpoints
-- Implemented via raw queries, this queries might be heavy so calls to database are wrapped into deferring function called `throttle`, this funstion will not let to execute more than one query per period - other calls will line up in queue and resolving one-per-period. This will prevent overload on database in expense of response time
+- Implemented via raw queries, this queries might be heavy so calls to database are wrapped into deferring function called `throttle`, this funstion will not let to execute more than one query per period - other calls will line up in queue and resolving one-per-period. This will prevent overload on database in expense of response time. Also execution time is maesured and written to logs
 
