@@ -186,20 +186,10 @@ definitions:
     properties:
       id:
         type: number
-      firstName:
+      fullName:
         type: string
-      lastName:
-        type: string
-      profession:
+      paid:
         type: number
-      balance:
-        type: number
-      type:
-        type: number
-      createdAt:
-        type: string
-      updatedAt:
-        type: string
   Job:
     type: object
     properties:

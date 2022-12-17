@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const express = require('express')
 const router = express.Router()
 const { HTTP_STATUS_CODES } = require('../common');
@@ -14,7 +15,8 @@ const getBestProfession = async (sequelize, start, end) => {
   const getProfessionSQL = `select Profiles.profession from Jobs
    join Contracts on Jobs.ContractId = Contracts.id
    join Profiles on Contracts.ContractorId = Profiles.id
-   where Jobs.paymentDate between '${start}' and '${end}' 
+   where Jobs.paid is not NULL
+   and Jobs.paymentDate between '${start}' and '${end}' 
    group by Profiles.profession
    order by sum(price) desc
    limit 1`;
@@ -24,16 +26,19 @@ const getBestProfession = async (sequelize, start, end) => {
 }
 
 const getBestClients = async (sequelize, start, end, limit) => {
-  const getBestClientSQL = `select Profiles.* from Jobs
+  const getBestClientSQL = `select  sum(price) as paid, Profiles.id, Profiles.firstName, Profiles.lastName from Jobs
    join Contracts on Jobs.ContractId = Contracts.id
    join Profiles on Contracts.ClientId = Profiles.id
-   where Jobs.paymentDate between '${start}' and '${end}' 
+   where Jobs.paid is not NULL
+   and Jobs.paymentDate between '${start}' and '${end}' 
    group by Profiles.id
-   order by sum(price) desc
+   order by paid desc
    limit ${limit}`;
   
   const [ bestClients ] = await sequelize.query(getBestClientSQL, { raw: true });
-  return bestClients;
+  return bestClients.map(client =>
+    _.omit({...client, fullName: `${client.firstName} ${client.lastName}`}, 'firstName','lastName')
+  );
 }
 
 // defer execution if last invocation was more recent than period ago

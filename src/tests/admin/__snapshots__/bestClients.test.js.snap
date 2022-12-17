@@ -3,28 +3,19 @@
 exports[`Best clients should limit output 1`] = `
 [
   {
-    "balance": 1.3,
-    "firstName": "Ash",
+    "fullName": "Ash Kethcum",
     "id": 4,
-    "lastName": "Kethcum",
-    "profession": "Pokemon master",
-    "type": "client",
+    "paid": 2020,
   },
   {
-    "balance": 231.11,
-    "firstName": "Mr",
+    "fullName": "Mr Robot",
     "id": 2,
-    "lastName": "Robot",
-    "profession": "Hacker",
-    "type": "client",
+    "paid": 442,
   },
   {
-    "balance": 1150,
-    "firstName": "Harry",
+    "fullName": "Harry Potter",
     "id": 1,
-    "lastName": "Potter",
-    "profession": "Wizard",
-    "type": "client",
+    "paid": 442,
   },
 ]
 `;
@@ -32,36 +23,24 @@ exports[`Best clients should limit output 1`] = `
 exports[`Best clients should provide best clients 1`] = `
 [
   {
-    "balance": 1.3,
-    "firstName": "Ash",
+    "fullName": "Ash Kethcum",
     "id": 4,
-    "lastName": "Kethcum",
-    "profession": "Pokemon master",
-    "type": "client",
+    "paid": 2020,
   },
   {
-    "balance": 231.11,
-    "firstName": "Mr",
+    "fullName": "Mr Robot",
     "id": 2,
-    "lastName": "Robot",
-    "profession": "Hacker",
-    "type": "client",
+    "paid": 442,
   },
   {
-    "balance": 1150,
-    "firstName": "Harry",
+    "fullName": "Harry Potter",
     "id": 1,
-    "lastName": "Potter",
-    "profession": "Wizard",
-    "type": "client",
+    "paid": 442,
   },
   {
-    "balance": 451.3,
-    "firstName": "John",
+    "fullName": "John Snow",
     "id": 3,
-    "lastName": "Snow",
-    "profession": "Knows nothing",
-    "type": "client",
+    "paid": 200,
   },
 ]
 `;
