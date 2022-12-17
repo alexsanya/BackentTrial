@@ -48,7 +48,7 @@ describe('Get unpaid jobs', () => {
     const jobId = 2;
     const contractorId = 6;
 
-    const response = await request(app)
+    await request(app)
       .post(`/jobs/${jobId}/pay`)
       .set('profile_id', profileId)
       .expect(HTTP_STATUS_CODES.CREATED);
@@ -68,7 +68,7 @@ describe('Get unpaid jobs', () => {
     const jobId = 2;
     const contractorId = 6;
 
-    const response = await request(app)
+    await request(app)
       .post(`/jobs/${jobId}/pay`)
       .set('profile_id', profileId)
       .expect(HTTP_STATUS_CODES.BAD_REQUEST);
@@ -89,7 +89,7 @@ describe('Get unpaid jobs', () => {
     const jobId = 6;
     const contractorId = 7;
 
-    const response = await request(app)
+    await request(app)
       .post(`/jobs/${jobId}/pay`)
       .set('profile_id', profileId)
       .expect(HTTP_STATUS_CODES.BAD_REQUEST);
@@ -110,7 +110,7 @@ describe('Get unpaid jobs', () => {
     const jobId = 5;
     const contractorId = 7;
 
-    const response = await request(app)
+    await request(app)
       .post(`/jobs/${jobId}/pay`)
       .set('profile_id', profileId)
       .expect(HTTP_STATUS_CODES.CONFLICT);
@@ -131,7 +131,7 @@ describe('Get unpaid jobs', () => {
     const jobId = 2;
     const contractorId = 6;
 
-    const response = await request(app)
+    await request(app)
       .post(`/jobs/${jobId}/pay`)
       .set('profile_id', profileId)
       .expect(HTTP_STATUS_CODES.BAD_REQUEST);
