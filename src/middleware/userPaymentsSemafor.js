@@ -1,3 +1,4 @@
+const logger = require('../logger');
 const { HTTP_STATUS_CODES } = require('../common');
 
 const paymentsInProgress = {}
@@ -10,7 +11,7 @@ const userPaymentsSemafor = async (req, res, next) => {
   }
 
   paymentsInProgress[profile.id] = true;
-  console.log(`userPaymentsSemafor locked for profile ${profile.id}`);
+  logger.log(`[userPaymentsSemafor] locked for profile ${profile.id}`);
   next();
 }
 
@@ -18,7 +19,7 @@ const userPaymentsUnlock = async (req, res, next) => {
   const { profile } = req
   paymentsInProgress[profile.id] = false
 
-  console.log(`userPaymentsUnlock unlocked for profile ${profile.id}`);
+  logger.log(`[userPaymentsSemafor] unlocked for profile ${profile.id}`);
 }
 
 
@@ -26,7 +27,7 @@ const errorHandler = async (err, req, res, next) => {
   const { profile } = req
   if (err.paymentError) {
     paymentsInProgress[profile.id] = false
-    console.log(`errorHandler unlocked for profile ${profile.id}`);
+    logger.log(`[userPaymentsSemafor][errorHandler] unlocked for profile ${profile.id}`);
   }
   res.status(err.status || HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR).send(err.message)
 }

@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const express = require('express')
 const router = express.Router()
+const logger = require('../logger');
 const { HTTP_STATUS_CODES } = require('../common');
 
 const getFormattedDate = date => {
@@ -45,14 +46,14 @@ const getBestClients = async (sequelize, start, end, limit) => {
 const throttle = (func, period) => {
   let lastCallTs;
   return (...args) => {
-    console.log('Time since last call: ', Date.now()-lastCallTs);
+    logger.debug('[throttle] Time since last call: ', Date.now()-lastCallTs);
     if (!lastCallTs || (Date.now()-lastCallTs) > period) {
       lastCallTs = Date.now();
       return func(...args);
     }
     return new Promise((resolve, reject) => {
       const timeToInvocation = lastCallTs + period - Date.now();
-      console.log('Time to next invocation: ', timeToInvocation);
+      logger.debug('[throttle] Time to next invocation: ', timeToInvocation);
       setTimeout(() => {
         func(...args)
           .then(result => resolve(result))
@@ -84,7 +85,7 @@ const throttledBestClientsQuery = throttle(getBestClients, THROTTLE_INTERVAL_MS)
 
 router.get('/admin/best-profession', datesIntervalMiddleware, async (req, res, next) => {
   const { dateStart, dateEnd } = req;
-  console.log({ dateStart, dateEnd });
+  logger.debug('[best-profession]', { dateStart, dateEnd });
 
   const sequelize = req.app.get('sequelize');
   // deferring query to DB cause aggregation queries could be heavy
@@ -95,7 +96,7 @@ router.get('/admin/best-profession', datesIntervalMiddleware, async (req, res, n
 
 router.get('/admin/best-clients', datesIntervalMiddleware, async (req, res, next) => {
   const { dateStart, dateEnd } = req;
-  console.log({ dateStart, dateEnd });
+  logger.debug('[best-clients]', { dateStart, dateEnd });
 
   const sequelize = req.app.get('sequelize');
   // deferring query to DB cause aggregation queries could be heavy

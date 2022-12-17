@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const logger = require('../logger');
 const { HTTP_STATUS_CODES } = require('../common');
 const {getUnpaidJobsForProfile} = require('./common');
 const {getProfile} = require('../middleware/getProfile')
@@ -30,7 +31,7 @@ router.post('/balances/deposit/:userId', getProfileByUserId, userPaymentsSemafor
     const unpaidJobs = await getUnpaidJobsForProfile(profile, req.app.get('models'));
     const totalToPay = unpaidJobs.reduce((acc, job) => acc + job.price, 0);
     const maxAllowed = Math.round(totalToPay * 0.25);
-    console.log(`Limit: ${maxAllowed}`);
+    logger.debug(`[deposit ]Limit: ${maxAllowed}`);
     if (amount > Math.trunc(totalToPay * 0.25)) {
       const message = `Amount should not exceed ${maxAllowed}`;
       res.status(HTTP_STATUS_CODES.BAD_REQUEST).send(message);
@@ -48,7 +49,7 @@ router.post('/balances/deposit/:userId', getProfileByUserId, userPaymentsSemafor
     res.status(201).end();
     next();
   } catch(error) {
-    console.log(error);
+    logger.error(error);
     next({...error, paymentError: true})
   } 
 }, userPaymentsUnlock);

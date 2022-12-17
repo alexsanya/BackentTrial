@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const logger = require('../logger');
 const { HTTP_STATUS_CODES } = require('../common');
 const {getProfile} = require('../middleware/getProfile')
 const {getUnpaidJobsForProfile} = require('./common');
@@ -42,9 +43,9 @@ router.post('/jobs/:job_id(\\d+)/pay', getProfile, userPaymentsSemafor, async (r
       }
     })
     
-    console.log('Contractor ID: ', job.Contract.ContractorId);
-    console.log('Price: ', job.price);
-    console.log('Balance: ', profile.balance);
+    logger.debug('[jobs/pay] Contractor ID: ', job.Contract.ContractorId);
+    logger.debug('[jobs/pay] Price: ', job.price);
+    logger.debug('[jobs/pay] Balance: ', profile.balance);
 
     if (job.price > profile.balance) {
       res.status(HTTP_STATUS_CODES.CONFLICT).send(`The balance is insufficient, needs to be at least ${job.price}`);
@@ -55,7 +56,7 @@ router.post('/jobs/:job_id(\\d+)/pay', getProfile, userPaymentsSemafor, async (r
       where: { id: job.Contract.ContractorId }
     });
 
-    console.log('Contractor balance: ', contractor.balance);
+    logger.debug('[jobs/pay] Contractor balance: ', contractor.balance);
 
     await Profile.update({
       balance: profile.balance - job.price
@@ -89,7 +90,7 @@ router.post('/jobs/:job_id(\\d+)/pay', getProfile, userPaymentsSemafor, async (r
     res.status(201).end();
     next();
   } catch(error) {
-    console.log(error);
+    logger.error(error);
     await transaction.rollback();
     next({...error, paymentError: true})
   } 
