@@ -48,5 +48,5 @@
 - Using the same semafor as make payment endpoint - locking per profile
 
 ### Best profession and best clients endpoints
-- Implemented via raw queries, this queries might be heavy so calls to database are wrapped into deferring function called `throttle`, this funstion will not let to execute more than one query per period - other calls will line up in queue and resolving one-per-period. THis will prevent overload on database in expense of response time
+- Implemented via raw queries, this queries might be heavy so calls to database are wrapped into deferring function called `throttle`, this funstion will not let to execute more than one query per period - other calls will line up in queue and resolving one-per-period. This will prevent overload on database in expense of response time
 
