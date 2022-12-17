@@ -12,6 +12,14 @@ const getFormattedDate = date => {
   return `${year}-${month}-${day}`;
 }
 
+const measureTime = async (prefix, action) => {
+  const hrstart = process.hrtime();
+  const result = await action();
+  const hrend = process.hrtime(hrstart);
+  logger.debug(prefix, `Execution time (hr): ${hrend[0]}s ${hrend[1] / 1e6}ms`);
+  return result;
+}
+
 const getBestProfession = async (sequelize, start, end) => {
   const getProfessionSQL = `select Profiles.profession from Jobs
    join Contracts on Jobs.ContractId = Contracts.id
@@ -22,7 +30,7 @@ const getBestProfession = async (sequelize, start, end) => {
    order by sum(price) desc
    limit 1`;
 
-  const { profession } = await sequelize.query(getProfessionSQL, { plain: true, raw: true });
+  const { profession } = await measureTime('[getBestProfession]', () => sequelize.query(getProfessionSQL, { plain: true, raw: true }));
   return profession;
 }
 
@@ -36,7 +44,7 @@ const getBestClients = async (sequelize, start, end, limit) => {
    order by paid desc
    limit ${limit}`;
   
-  const [ bestClients ] = await sequelize.query(getBestClientSQL, { raw: true });
+  const [ bestClients ] = await measureTime('[getBestClients]', () => sequelize.query(getBestClientSQL, { raw: true }));
   return bestClients.map(client =>
     _.omit({...client, fullName: `${client.firstName} ${client.lastName}`}, 'firstName','lastName')
   );
