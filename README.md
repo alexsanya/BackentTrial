@@ -1,126 +1,52 @@
-# DEEL BACKEND TASK
-
-  
-
-💫 Welcome! 🎉
-
-
-This backend exercise involves building a Node.js/Express.js app that will serve a REST API. We imagine you should spend around 3 hours at implement this feature.
-
-## Data Models
-
-> **All models are defined in src/model.js**
-
-### Profile
-A profile can be either a `client` or a `contractor`. 
-clients create contracts with contractors. contractor does jobs for clients and get paid.
-Each profile has a balance property.
-
-### Contract
-A contract between and client and a contractor.
-Contracts have 3 statuses, `new`, `in_progress`, `terminated`. contracts are considered active only when in status `in_progress`
-Contracts group jobs within them.
-
-### Job
-contractor get paid for jobs by clients under a certain contract.
+# API IMPLEMENTATION
 
 ## Getting Set Up
 
   
-The exercise requires [Node.js](https://nodejs.org/en/) to be installed. We recommend using the LTS version.
+1. Several new packages been installed so `npm install` is required
+  
+2. To make sure everything been installed correctly run integration tests: `npm run test`, integration tests located in `src/tests`
+
+3. Next, `npm run seed` will seed the local SQLite database
+
+4. Then run `npm start` which should start both the server and the React client.
+
+5. Explore API endpoints via Swagger UI: `http://localhost:3001/api-docs/` - raw swagger schema located in `src/swagger.yaml`
 
   
-
-1. Start by cloning this repository.
-
-  
-
-1. In the repo root directory, run `npm install` to gather all dependencies.
-
-  
-
-1. Next, `npm run seed` will seed the local SQLite database. **Warning: This will drop the database if it exists**. The database lives in a local file `database.sqlite3`.
-
-  
-
-1. Then run `npm start` which should start both the server and the React client.
-
-  
-
-❗️ **Make sure you commit all changes to the master branch!**
-
-  
-  
-
 ## Technical Notes
 
   
 
-- The server is running with [nodemon](https://nodemon.io/) which will automatically restart for you when you modify and save a file.
 
-- The database provider is SQLite, which will store data in a file local to your repository called `database.sqlite3`. The ORM [Sequelize](http://docs.sequelizejs.com/) is on top of it. You should only have to interact with Sequelize - **please spend some time reading sequelize documentation before starting the exercise.**
+### Integration tests
+- `model.js` been modified, separate sequelize config added for integrations tests run
+- Integration tests will use separate database file `database-test.sqlite3`
 
-- To authenticate users use the `getProfile` middleware that is located under src/middleware/getProfile.js. users are authenticated by passing `profile_id` in the request header. after a user is authenticated his profile will be available under `req.profile`. make sure only users that are on the contract can access their contracts.
-- The server is running on port 3001.
+### Swagger UI
+- to test API endpoints `swagger-ui-express` been added
+- swagger schema located in `src/swagger.yaml`
+- swagger ui interface availible at address: `http://localhost:3001/api-docs/` 
 
-  
+### Get contract by id
+- SQL query been modified in order to fetch profiles alongside with contract and check if caller is either a client or contractor
+- Regex filter been added to query in order to protect from SQL injection
 
-## APIs To Implement 
+### Get contracts by profile
+- If thee are too many contracts for particular profile then API will be forsing client to use pagination with `offset` and `limit` parameters
 
-  
+### Get unpaid contracts
+- Implemented with assumption that contract couldn't be terminated untill all jobs are payed
 
-Below is a list of the required API's for the application.
+### Make payment endpoint
+- Concurrent executions for the same profile are prevented by semafor - it is map that marks profiles for which payment operation is in progress, until it finished or failed other payment requests for same profile will result in `409 Conflict` error
+- Semafor implemented as a couple of middlewares - one before processing to lock the profile and another after - to release it
+- All state changes for Job and Profile tables are within same transaction to avoid mismanagement of state
 
-  
+### Topup client account endpoint
+- Will run only for client profiles, request to other profiles will result in `400 Bad request` error
+- Using the same semafor as make payment endpoint - locking per profile
 
+### Best profession and best clients endpoints
+- Implemented via raw queries, this queries might be heavy so calls to database are wrapped into deferring function called `throttle`, this funstion will not let to execute more than one query per period - other calls will line up in queue and resolving one-per-period. THis will prevent overload on database in expense of response time
 
-1. ***GET*** `/contracts/:id` - This API is broken 😵! it should return the contract only if it belongs to the profile calling. better fix that!
-
-1. ***GET*** `/contracts` - Returns a list of contracts belonging to a user (client or contractor), the list should only contain non terminated contracts.
-
-1. ***GET*** `/jobs/unpaid` -  Get all unpaid jobs for a user (***either*** a client or contractor), for ***active contracts only***.
-
-1. ***POST*** `/jobs/:job_id/pay` - Pay for a job, a client can only pay if his balance >= the amount to pay. The amount should be moved from the client's balance to the contractor balance.
-
-1. ***POST*** `/balances/deposit/:userId` - Deposits money into the the the balance of a client, a client can't deposit more than 25% his total of jobs to pay. (at the deposit moment)
-
-1. ***GET*** `/admin/best-profession?start=<date>&end=<date>` - Returns the profession that earned the most money (sum of jobs paid) for any contactor that worked in the query time range.
-
-1. ***GET*** `/admin/best-clients?start=<date>&end=<date>&limit=<integer>` - returns the clients the paid the most for jobs in the query time period. limit query parameter should be applied, default limit is 2.
-```
- [
-    {
-        "id": 1,
-        "fullName": "Reece Moyer",
-        "paid" : 100.3
-    },
-    {
-        "id": 200,
-        "fullName": "Debora Martin",
-        "paid" : 99
-    },
-    {
-        "id": 22,
-        "fullName": "Debora Martin",
-        "paid" : 21
-    }
-]
-```
-
-  
-
-## Going Above and Beyond the Requirements
-
-Given the time expectations of this exercise, we don't expect anyone to submit anything super fancy, but if you find yourself with extra time, any extra credit item(s) that showcase your unique strengths would be awesome! 🙌
-
-It would be great for example if you'd write some unit test / simple frontend demostrating calls to your fresh APIs.
-
-  
-
-## Submitting the Assignment
-
-When you have finished the assignment, create a github repository and send us the link.
-
-  
-
-Thank you and good luck! 🙏
