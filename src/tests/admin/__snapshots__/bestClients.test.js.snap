@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Best clients should limit output 1`] = `
+[
+  {
+    "balance": 1.3,
+    "firstName": "Ash",
+    "id": 4,
+    "lastName": "Kethcum",
+    "profession": "Pokemon master",
+    "type": "client",
+  },
+  {
+    "balance": 231.11,
+    "firstName": "Mr",
+    "id": 2,
+    "lastName": "Robot",
+    "profession": "Hacker",
+    "type": "client",
+  },
+  {
+    "balance": 1150,
+    "firstName": "Harry",
+    "id": 1,
+    "lastName": "Potter",
+    "profession": "Wizard",
+    "type": "client",
+  },
+]
+`;
+
+exports[`Best clients should provide best clients 1`] = `
+[
+  {
+    "balance": 1.3,
+    "firstName": "Ash",
+    "id": 4,
+    "lastName": "Kethcum",
+    "profession": "Pokemon master",
+    "type": "client",
+  },
+  {
+    "balance": 231.11,
+    "firstName": "Mr",
+    "id": 2,
+    "lastName": "Robot",
+    "profession": "Hacker",
+    "type": "client",
+  },
+  {
+    "balance": 1150,
+    "firstName": "Harry",
+    "id": 1,
+    "lastName": "Potter",
+    "profession": "Wizard",
+    "type": "client",
+  },
+  {
+    "balance": 451.3,
+    "firstName": "John",
+    "id": 3,
+    "lastName": "Snow",
+    "profession": "Knows nothing",
+    "type": "client",
+  },
+]
+`;
