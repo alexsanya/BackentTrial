@@ -22,6 +22,7 @@
 ### Integration tests
 - `model.js` been modified, separate sequelize config added for integrations tests run
 - Integration tests will use separate database file `database-test.sqlite3`
+- Database seeds before each test for this reason tests are configured to run sequentially with help of `jest-serial-runner`
 
 ### Swagger UI
 - to test API endpoints `swagger-ui-express` been added
