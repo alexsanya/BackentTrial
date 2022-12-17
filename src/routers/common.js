@@ -6,9 +6,7 @@ const getUnpaidJobsForProfile = async (profile, models) => {
   const contractIds = await Contract.findAll({
     attributes: ['id'],
     where: {
-      status: {
-        [Op.not]: 'terminated',  //assuming the contract couldn't be terminated untill all jobs are payed
-      }
+      status: 'in_progress',
     },
     include: {
       model: Profile,

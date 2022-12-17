@@ -31,7 +31,7 @@ router.post('/balances/deposit/:userId', getProfileByUserId, userPaymentsSemafor
     const totalToPay = unpaidJobs.reduce((acc, job) => acc + job.price, 0);
     const maxAllowed = Math.round(totalToPay * 0.25);
     console.log(`Limit: ${maxAllowed}`);
-    if (amount > Math.round(totalToPay * 0.25)) {
+    if (amount > Math.trunc(totalToPay * 0.25)) {
       const message = `Amount should not exceed ${maxAllowed}`;
       res.status(HTTP_STATUS_CODES.BAD_REQUEST).send(message);
       throw new Error(message);

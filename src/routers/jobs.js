@@ -28,7 +28,7 @@ router.post('/jobs/:job_id(\\d+)/pay', getProfile, userPaymentsSemafor, async (r
 
     const unpaidJobs = await getUnpaidJobsForProfile(profile, req.app.get('models'));
     if (!unpaidJobs.some(job => job.dataValues.id === job_id)) {
-      res.status(HTTP_STATUS_CODES.BAD_REQUEST).send('This job is not belongs to client`s contract');
+      res.status(HTTP_STATUS_CODES.BAD_REQUEST).send('This job is not belongs to client`s contract or not in progress');
       throw new Error('Wrong job id');
     }
 
